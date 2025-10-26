@@ -1,3 +1,9 @@
+"""Ejercicio 2: Button
+Diseña una ventana con dos botones:
+• Uno debe mostrar un mensaje en una etiqueta al presionarlo.
+• El otro debe cerrar la ventana.
+Puedes usar root.quit() para salir de la aplicación."""
+
 import tkinter as tk
 
 if __name__ == '__main__':
