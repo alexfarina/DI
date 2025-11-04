@@ -1,0 +1,6 @@
+if __name__ == "__main__"
+
+Sirve para que un bloque de código se ejecute solo si corres el archivo directamente, no al importarlo.
+
+Si en operaciones.py hubiera código visible que no quiero que se ejecute (por ejemplo, un print con variables), necesitaría añadirlo dentro de este bloque para que no se ejecute al importar operaciones.py en calculadora.py.
+En este caso, como operaciones.py solo tiene funciones, no es necesario usarlo, porque al importar las funciones no se ejecuta ningún código.
