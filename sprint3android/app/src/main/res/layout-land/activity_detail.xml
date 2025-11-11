@@ -26,6 +26,7 @@
         android:background="@drawable/shape_oval"
         android:scaleType="centerCrop"
         />
+    <!--     android:src="@drawable/perro" -->
     <TextView
         android:id="@+id/descripcionDetail"
         android:layout_width="0dp"

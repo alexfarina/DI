@@ -19,10 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentContainer = findViewById(R.id.fragment_container);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, new AboutFragment())
-                .commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AboutFragment()).commit();
 
         BottomNavigationView bar = findViewById(R.id.bottomNavigation);
 
@@ -32,17 +29,11 @@ public class MainActivity extends AppCompatActivity {
                 fragmentContainer.removeAllViews();
 
                 if (item.getItemId() == R.id.aboutfragment) {
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.aboutfragment, new AboutFragment())
-                            .commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AboutFragment()).commit();
                 }
 
                 if (item.getItemId() == R.id.catalogfragment) {
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.catalogfragment, new CatalogFragment())
-                            .commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CatalogFragment()).commit();
                 }
 
                 return false;
