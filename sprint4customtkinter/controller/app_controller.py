@@ -1,4 +1,3 @@
-# controller/app_controller.py
 from model.usuario_model import GestorUsuarios, Usuario
 from view.main_view import MainView, AddUserView
 from pathlib import Path
@@ -17,6 +16,7 @@ class AppController:
         self.gestor_usuarios = GestorUsuarios(data_path=self.DATA_PATH)
 
         self.vista = MainView(master=self.master)
+        self.vista.filtrar_callback = self.filtrar_usuarios  # callback para busqueda/filtro
 
         self.avatar_images = {}
 
@@ -29,15 +29,16 @@ class AppController:
 
     def guardar_usuarios(self):
         self.gestor_usuarios.guardar_csv()
-        messagebox.showinfo("Éxito", "Datos guardados correctamente en usuarios.csv.")
+        self.vista.actualizar_barra_estado(len(self.gestor_usuarios.listar()), " - Guardado OK")
 
     def cargar_usuarios(self):
         self.gestor_usuarios.cargar_csv()
         self.refrescar_lista_usuarios()
-        messagebox.showinfo("Éxito", "Datos cargados.")
+        self.vista.actualizar_barra_estado(len(self.gestor_usuarios.listar()), " - Datos cargados")
 
     def refrescar_lista_usuarios(self):
         usuarios = self.gestor_usuarios.listar()
+        self.vista.usuarios = usuarios
         self.vista.actualizar_lista_usuarios(
             usuarios,
             on_seleccionar_callback=self.seleccionar_usuario
@@ -49,39 +50,32 @@ class AppController:
             self.vista.mostrar_detalles_usuario(usuario, self.cargar_imagen_avatar)
 
     def cargar_imagen_avatar(self, filename: str, size: tuple = (150, 150)):
-
         cache_key = (filename, size)
         if cache_key in self.avatar_images:
             return self.avatar_images[cache_key]
 
         ruta_imagen = self.ASSETS_PATH / filename
-
         if not ruta_imagen.exists():
             return None
 
         try:
             pil_image = Image.open(ruta_imagen)
             pil_image = pil_image.resize(size)
-
             ctk_image = ctk.CTkImage(light_image=pil_image, size=size)
             photo_image = ImageTk.PhotoImage(pil_image)
-
             self.avatar_images[cache_key] = (ctk_image, photo_image)
             return ctk_image, photo_image
-
         except Exception:
             return None
 
     def abrir_ventana_añadir(self):
         add_view = AddUserView(self.master, avatar_loader_callback=self.cargar_imagen_avatar)
-
         add_view.guardar_button.configure(
             command=lambda: self.añadir_usuario(add_view)
         )
 
     def añadir_usuario(self, add_view: AddUserView):
         data = add_view.get_data()
-
         if not data['nombre'] or not data['edad']:
             messagebox.showerror("Error de Validación", "El nombre y la edad son obligatorios.")
             return
@@ -101,8 +95,17 @@ class AppController:
             avatar=data['avatar']
         )
         self.gestor_usuarios.agregar(nuevo_usuario)
-
         self.refrescar_lista_usuarios()
         add_view.window.destroy()
-        messagebox.showinfo("Éxito", f"Usuario '{nuevo_usuario.nombre}' registrado.")
+        self.vista.actualizar_barra_estado(len(self.gestor_usuarios.listar()), f" - Usuario '{nuevo_usuario.nombre}' registrado")
 
+    def filtrar_usuarios(self, genero="Todos", texto_busqueda=""):
+        texto_busqueda = texto_busqueda or ""  # nunca None
+        usuarios_filtrados = [
+            u for u in self.gestor_usuarios.listar()
+            if (genero == "Todos" or u.genero.lower() == genero.lower())
+               and texto_busqueda.lower() in u.nombre.lower()
+        ]
+        self.vista.usuarios = usuarios_filtrados  # actualizar lista filtrada
+        self.vista.actualizar_lista_usuarios(usuarios_filtrados, self.seleccionar_usuario)
+        self.vista.actualizar_barra_estado(len(usuarios_filtrados))
