@@ -69,6 +69,8 @@ class MainView:
         self.current_avatar_photo = None
         self.usuarios = []
         self.filtrar_callback = None
+        self.add_user_callback = None
+        self.delete_user_callback = None
 
         # Menú
         self.menubar = tk.Menu(master)
@@ -89,19 +91,40 @@ class MainView:
         self.header = ctk.CTkFrame(self.master, height=60)
         self.header.grid(row=0, column=0, columnspan=2, sticky="ew", padx=10, pady=(10, 5))
 
-        # Búsqueda por nombre
+
+        self.delete_button = ctk.CTkButton(
+            self.header,
+            text="Eliminar Usuario",
+            command=lambda: self.delete_user_callback() if self.delete_user_callback else None
+        )
+        self.delete_button.pack(side="right", padx=(5, 10))
+
+        self.add_button = ctk.CTkButton(
+            self.header,
+            text="Añadir",
+            command=lambda: self.add_user_callback() if self.add_user_callback else None
+        )
+        self.add_button.pack(side="right", padx=5)
+
+        ctk.CTkLabel(self.header).pack(side="right", padx=10)
+
         self.busqueda_var = ctk.StringVar()
-        self.busqueda_entry = ctk.CTkEntry(self.header, placeholder_text="Buscar por nombre...", textvariable=self.busqueda_var)
-        self.busqueda_entry.pack(side="left", padx=10)
+        self.busqueda_label = ctk.CTkLabel(self.header, text="Buscar")
+        self.busqueda_label.pack(side="left")
+        self.busqueda_entry = ctk.CTkEntry(self.header, placeholder_text="Buscar por nombre...",
+                                           textvariable=self.busqueda_var)
+        self.busqueda_entry.pack(side="left", padx=(10, 5))
         self.busqueda_var.trace_add("write", self.busqueda_cambiada)
 
-        # Filtro género
+        # 4. Filtro género (a la izquierda)
         self.genero_var = ctk.StringVar(value="Todos")
         self.genero_menu = ctk.CTkOptionMenu(
             self.header, values=["Todos", "hombre", "mujer"], variable=self.genero_var,
             command=lambda _: self.filtrar_callback(self.genero_var.get(), self.busqueda_var.get())
         )
-        self.genero_menu.pack(side="left", padx=10)
+        self.genero_menu.pack(side="left", padx=(5, 10))
+
+        # --- Fin Elementos de Control en el Header ---
 
         # Contenedores
         self.left_container = ctk.CTkFrame(self.master)
@@ -129,13 +152,19 @@ class MainView:
         self.label_avatar = ctk.CTkLabel(self.details_frame, text="Archivo Avatar: ---")
         self.label_avatar.grid(row=3, column=0, sticky="w", pady=5)
 
-        # Footer con botón y barra de estado
         self.footer = ctk.CTkFrame(self.master, height=60)
         self.footer.grid(row=2, column=0, columnspan=2, sticky="ew", padx=10, pady=(10, 5))
-        self.add_button = ctk.CTkButton(self.footer, text="+ Añadir Usuario")
-        self.add_button.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
+
+        self.auto_save_button = ctk.CTkButton(
+            self.footer,
+            text="Auto-Guardado: DESACTIVADO",
+            fg_color="gray",  # Color inicial
+            hover_color="#555555"
+        )
+        self.auto_save_button.pack(side="left", padx=(5, 10), pady=5)
+
         self.status_bar = ctk.CTkLabel(self.footer, text="Usuarios: 0", anchor="w")
-        self.status_bar.grid(row=1, column=0, sticky="ew", padx=5)
+        self.status_bar.pack(side="left", fill="x", expand=True, padx=(10, 5), pady=5)
 
     def busqueda_cambiada(self, *_):
         if self.filtrar_callback:
@@ -191,20 +220,7 @@ class MainView:
         self.status_bar.configure(text=f"Usuarios: {total} {mensaje}")
 
     def editar_usuario(self, index, on_seleccionar_callback):
-        usuario = self.usuarios[index]
-        modal = AddUserView(self.master, avatar_loader_callback=None)
-        modal.nombre_entry.insert(0, usuario.nombre)
-        modal.edad_entry.insert(0, str(usuario.edad))
-        modal.genero_var.set(usuario.genero)
-        modal.avatar_seleccionado.set(usuario.avatar)
+        pass
 
-        def guardar_edicion():
-            usuario.nombre = modal.nombre_entry.get()
-            usuario.edad = int(modal.edad_entry.get())
-            usuario.genero = modal.genero_var.get()
-            usuario.avatar = modal.avatar_seleccionado.get()
-            on_seleccionar_callback(index)
-            self.actualizar_barra_estado(len(self.usuarios), " - Guardado OK")
-            modal.window.destroy()
-
-        modal.guardar_button.configure(command=guardar_edicion)
+    def update_auto_save_button(self, estado: str):
+        self.auto_save_button.configure(text=f"Auto-Guardado: {estado}")

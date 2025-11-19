@@ -76,3 +76,9 @@ class GestorUsuarios:
     def agregar(self, usuario):
         self._usuarios.append(usuario)
         self.guardar_csv()
+
+    def eliminar_por_objeto(self, usuario_obj):
+        try:
+            self._usuarios.remove(usuario_obj)
+        except ValueError:
+            print("No se pudo eliminar el usuario con nombre '{usuario_obj.nombre}' porque no se encontró el objeto en la lista.")
