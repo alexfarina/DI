@@ -1,5 +1,10 @@
 # view/main_view.py
 import customtkinter as ctk
+import tkinter as tk
+from tkinter import messagebox
+from PIL import Image, ImageTk
+from pathlib import Path
+
 
 class AddUserView:
     def __init__(self, master, avatar_loader_callback):
@@ -71,6 +76,11 @@ class MainView:
         self.scrollable_frame = None
         self.botones_usuarios = []
         self.current_avatar_photo = None
+
+        self.menubar = tk.Menu(master)
+        master.config(menu=self.menubar)
+        self.menu_archivo = tk.Menu(self.menubar, tearoff=0)
+        self.menubar.add_cascade(label="Archivo", menu=self.menu_archivo)
 
         self._setup_ui()
 

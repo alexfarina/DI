@@ -20,9 +20,21 @@ class AppController:
 
         self.avatar_images = {}
 
+        self.vista.menu_archivo.add_command(label="Guardar", command=self.guardar_usuarios)
+        self.vista.menu_archivo.add_command(label="Cargar", command=self.cargar_usuarios)
+
         self.vista.add_button.configure(command=self.abrir_ventana_añadir)
 
+        self.cargar_usuarios()
+
+    def guardar_usuarios(self):
+        self.gestor_usuarios.guardar_csv()
+        messagebox.showinfo("Éxito", "Datos guardados correctamente en usuarios.csv.")
+
+    def cargar_usuarios(self):
+        self.gestor_usuarios.cargar_csv()
         self.refrescar_lista_usuarios()
+        messagebox.showinfo("Éxito", "Datos cargados.")
 
     def refrescar_lista_usuarios(self):
         usuarios = self.gestor_usuarios.listar()
