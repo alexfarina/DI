@@ -29,30 +29,32 @@ class GestorUsuarios:
         self._usuarios.append(Usuario("Maria", 60, "mujer", "avatar2.jpg"))
         self._usuarios.append(Usuario("Elena", 25, "mujer", "avatar4.jpg"))
 
-    def cargar_csv(self):
-        self._usuarios.clear()
-        try:
-            with open(self.data_path, mode='r', newline='', encoding='utf-8') as f:
-                reader = csv.DictReader(f)
-                next(reader)
-                for row in reader:
-                    try:
-                        usuario = Usuario(
-                            row['nombre'],
-                            int(row['edad']),
-                            row['genero'],
-                            row['avatar']
-                        )
-                        self._usuarios.append(usuario)
-                    except ValueError:
-                        pass
-                    except KeyError:
-                        pass
 
-        except FileNotFoundError:
-            self._cargar_datos_de_ejemplo()
-        except Exception:
-            self._cargar_datos_de_ejemplo()
+
+    def cargar_csv(self):
+            self._usuarios.clear()
+            try:
+                with open(self.data_path, mode='r', newline='', encoding='utf-8') as f:
+                    reader = csv.DictReader(f)
+
+                    for row in reader:
+                        try:
+                            usuario = Usuario(
+                                row['nombre'],
+                                int(row['edad']),
+                                row['genero'],
+                                row['avatar']
+                            )
+                            self._usuarios.append(usuario)
+                        except ValueError:
+                            pass
+                        except KeyError:
+                            pass
+
+            except FileNotFoundError:
+                self._cargar_datos_de_ejemplo()
+            except Exception:
+                self._cargar_datos_de_ejemplo()
 
     def guardar_csv(self):
         fieldnames = ['nombre', 'edad', 'genero', 'avatar']
