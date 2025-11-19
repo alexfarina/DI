@@ -87,21 +87,29 @@ class MainView:
     def _setup_ui(self):
         self.master.grid_columnconfigure(0, weight=1)
         self.master.grid_columnconfigure(1, weight=2)
-        self.master.grid_rowconfigure(0, weight=1)
+        self.master.grid_rowconfigure(0, weight=0)
+        self.master.grid_rowconfigure(1, weight=1)
+        self.master.grid_rowconfigure(2, weight=0)
+
+
+        self.header = ctk.CTkFrame(self.master, height=60)
+        self.header.grid(row=0, column=0, columnspan=2, sticky="ew", padx=10, pady=(10, 5))
+
+        header_label = ctk.CTkLabel(self.header, text="Header")
+        header_label.pack(pady=10)
 
         self.left_container = ctk.CTkFrame(self.master)
-        self.left_container.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+        self.left_container.grid(row=1, column=0, sticky="nsew", padx=10, pady=10)
+
         self.left_container.grid_rowconfigure(0, weight=1)
         self.left_container.grid_columnconfigure(0, weight=1)
 
         self.scrollable_frame = ctk.CTkScrollableFrame(self.left_container, label_text="Usuarios Registrados")
         self.scrollable_frame.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
 
-        self.add_button = ctk.CTkButton(self.left_container, text="+ Añadir Usuario")
-        self.add_button.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
 
         self.right_frame = ctk.CTkFrame(self.master)
-        self.right_frame.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
+        self.right_frame.grid(row=1, column=1, sticky="nsew", padx=10, pady=10)
 
         self.label_avatar_img = ctk.CTkLabel(self.right_frame, text="Avatar", width=150, height=150)
         self.label_avatar_img.pack(anchor="n", pady=(20, 10), padx=10)
@@ -121,6 +129,12 @@ class MainView:
 
         self.label_avatar = ctk.CTkLabel(self.details_frame, text="Archivo Avatar: ---")
         self.label_avatar.grid(row=3, column=0, sticky="w", pady=5)
+
+        self.footer = ctk.CTkFrame(self.master, height=60)
+        self.footer.grid(row=2, column=0, columnspan=2, sticky="ew", padx=10, pady=(10, 5))
+
+        self.add_button = ctk.CTkButton(self.footer, text="+ Añadir Usuario")
+        self.add_button.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
 
     def actualizar_lista_usuarios(self, usuarios, on_seleccionar_callback):
         for btn in self.botones_usuarios:

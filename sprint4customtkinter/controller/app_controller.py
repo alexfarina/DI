@@ -105,3 +105,4 @@ class AppController:
         self.refrescar_lista_usuarios()
         add_view.window.destroy()
         messagebox.showinfo("Éxito", f"Usuario '{nuevo_usuario.nombre}' registrado.")
+
