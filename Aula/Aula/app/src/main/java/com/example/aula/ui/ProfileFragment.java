@@ -66,11 +66,7 @@ public class ProfileFragment extends Fragment {
             settingsVm.setDarkMode(isChecked);
         });
 
-        String nombre="";
-        nombre =vm.getUserUid();
-        if (!Objects.equals(nombre, "")){
-            userProfile.setText(nombre);
-        }
-        userProfile.setText(nombre);
+//        userProfile.setText(vm.getUserUid());
+
     }
 }
