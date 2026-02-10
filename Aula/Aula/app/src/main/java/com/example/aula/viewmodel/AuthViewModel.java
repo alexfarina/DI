@@ -13,6 +13,7 @@ public class AuthViewModel extends ViewModel {
     private final MutableLiveData<Boolean> _loading = new MutableLiveData<>(false);
     private final MutableLiveData<String> _errorMessage = new MutableLiveData<>(null);
     private final MutableLiveData<String> _navEvent = new MutableLiveData<>(null);
+    String nombre="";
 
     public AuthViewModel(AuthRepository repo) {
         this.repo = repo;
@@ -21,6 +22,11 @@ public class AuthViewModel extends ViewModel {
     public LiveData<Boolean> getLoading() { return _loading; }
     public LiveData<String> getErrorMessage() { return _errorMessage; }
     public LiveData<String> getNavEvent() { return _navEvent; }
+
+    public String getUserUid(){
+         nombre=repo.getUID();
+        return nombre;
+    }
 
     public void consumeNavEvent() { _navEvent.setValue(null); }
 

@@ -36,6 +36,7 @@ public class HomeFragment extends Fragment {
         TextInputLayout tilSubject = view.findViewById(R.id.tilSubject);
 
         MaterialButton btnAdd = view.findViewById(R.id.btnAdd);
+        MaterialButton btnNavProfile = view.findViewById(R.id.btnNavProfile);
         MaterialButton btnDeleteLast = view.findViewById(R.id.btnDeleteLast);
         MaterialButton btnLogout = view.findViewById(R.id.btnLogout);
 
@@ -104,5 +105,12 @@ public class HomeFragment extends Fragment {
             NavHostFragment.findNavController(this)
                     .navigate(R.id.action_home_to_authGate);
         });
+
+        btnNavProfile.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.action_home_to_profile);
+        });
+
     }
 }
